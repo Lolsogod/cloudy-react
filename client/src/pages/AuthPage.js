@@ -45,7 +45,7 @@ export const AuthPage = () =>{
             <input type="password" placeholder="Enter Password"
                    name="password" required onChange={changeHandler}
                    value={form.password}/><br/><br/>
-            <button onClick={loginHandler} disabled={loading}>Login</button>
+            <button onClick={loginHandler} disabled={loading} style={{marginRight: "1rem"}}>Login</button> 
             <button onClick={registerHandler} disabled={loading}>Register</button>
         </div>
     )

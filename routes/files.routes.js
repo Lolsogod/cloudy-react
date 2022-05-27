@@ -8,7 +8,7 @@ const fs = require('fs');
 
 const storage = multer.diskStorage({
     destination: (req,file, cb) => {
-        cb(null, 'storage')
+        cb(null, `storage\\${req.user.userId}`)
     },
     filename: (req, file, cb) => {
         cb(null, file.originalname)
@@ -23,9 +23,9 @@ router.post('/upload', auth, async (req, res) =>{
             const name = req.file.originalname.split('.')[0]
             const extension = req.file.originalname.split('.')[1]
             const type = req.file.mimetype
-            const path = req.file.path
+            const path = `storage\\${req.user.userId}\\${req.file.originalname}`
             const size = req.file.size
-
+            console.log(path)
             const dbFile = new File({
                 name, extension, type, path, size, owner: req.user.userId
             })

@@ -4,6 +4,7 @@ const {check, validationResult} = require("express-validator");
 const User = require('../models/User');
 const jwt = require("jsonwebtoken");
 const config = require("config")
+const fs = require('fs');
 
 const router = Router();
 // /api/auth/register
@@ -31,11 +32,16 @@ router.post('/register',
         const hashedPassword = await bcrypt.hash(password, 12);
         const user = new User({email, password: hashedPassword});
 
-        await user.save();
+        await user.save().then(()=>{
+            let dir = `./storage/${user._id}`
+            if (!fs.existsSync(dir))
+                fs.mkdirSync(dir, { recursive: true });
+        });
+
 
         res.status(201).json({message: "пользователь создан"})
     } catch (e) {
-        res.status(500).json({message: "что-то пошло не так..."});
+        res.status(500).json({message: "что-то пошло не так..."+e});
     }
 })
 

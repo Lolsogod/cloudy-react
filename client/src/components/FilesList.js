@@ -13,7 +13,8 @@ export const FilesList = ({files, setFiles, fetchFiles}) => {
             headers: {
                 Authorization: `Basic ${token}`
             }}).then((response) => {
-                const fullName = path.split("/").slice(-1)[0]
+                const fullName = path.split("\\").slice(-1)[0]
+                console.log(path)
             FileDownload(response.data, fullName);
         });
     }
@@ -46,8 +47,8 @@ export const FilesList = ({files, setFiles, fetchFiles}) => {
                     <tr key={file._id}>
                         <td>{index + 1}</td>
                         <td>{file.name + "." + file.extension}</td>
-                        <td>{file.size}</td>
-                        <td>{file.date}</td>
+                        <td>{(file.size/1048576).toFixed(2)}kb</td>
+                        <td>{file.date.split("T")[0]}</td>
                         <td className={"download"} onClick={() => downloadFile(file._id, file.path)}>Download</td>
                         <td className={"download"} onClick={() => deleteFile(file._id, file.path)}>Delete</td>
                     </tr>

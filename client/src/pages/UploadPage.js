@@ -33,10 +33,17 @@ export const UploadPage = () =>{
         <div>
             <h1>Upload</h1>
             <form method="post" action="#" id="#">
-                <label htmlFor="file">Choose file to upload</label><br/>
-                <input type="file" id="file" name="file" multiple onChange={onInput}/>
-                <button onClick={onSubmit}>upload</button>
+                <div className="upCont">
+                    <label for="file" className="custom-upload">Choose</label>
+                    <input type="file" name="file" id="file" multiple  onChange={onInput}/>
+                    <span id="file-name">{file && file.name}</span>
+                    
+                    <button onClick={onSubmit}>Upload</button>
+                </div>
             </form>
         </div>
     )
 }
+//<label htmlFor="file">Choose file to upload</label><br/>
+//<input type="file" id="file" name="file" multiple onChange={onInput}/>
+//

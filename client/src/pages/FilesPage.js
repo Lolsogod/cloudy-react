@@ -26,7 +26,7 @@ export const FilesPage = () =>{
     },[fetchFiles])
 
     return(
-        <div>
+        <div className="fileContainer">
             <h1>All Files:</h1>
             <FilesList files={files} fetchFiles={fetchFiles} setFiles={setFiles}/>
         </div>
