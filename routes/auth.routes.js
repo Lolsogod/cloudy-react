@@ -30,7 +30,7 @@ router.post('/register',
            return  res.status(400).json({message: 'Такой мейл уже есть'})
 
         const hashedPassword = await bcrypt.hash(password, 12);
-        const user = new User({email, password: hashedPassword});
+        const user = new User({email, password: hashedPassword, space: 5368709120});
 
         await user.save().then(()=>{
             let dir = `./storage/${user._id}`
@@ -63,7 +63,7 @@ router.post('/login',
         const  {email, password} = req.body;
 
         const user = await User.findOne({email})
-
+        console.log(email)
         if(!user)
             return res.status(400).json({message: "пользователь не найден"})
 

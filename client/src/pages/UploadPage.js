@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 export const UploadPage = () =>{
     const navigate = useNavigate();
     const [file, setFile] = useState(null)
+    const [error, setError] = useState("")
     const auth = useContext(AuthContext)
 
     const onInput = element =>{
@@ -25,8 +26,8 @@ export const UploadPage = () =>{
             headers: {
                 Authorization: `Basic ${auth.token}`
             }})
-            .then(e=>navigate("/files"))
-            .catch(e=>console.log("err"))
+            .then(()=>navigate("/files"))
+            .catch(e=>setError(e.response.data.message))
     }
 
     return(
@@ -34,12 +35,12 @@ export const UploadPage = () =>{
             <h1>Upload</h1>
             <form method="post" action="#" id="#">
                 <div className="upCont">
-                    <label for="file" className="custom-upload">Choose</label>
+                    <label htmlFor="file" className="custom-upload">Choose</label>
                     <input type="file" name="file" id="file" multiple  onChange={onInput}/>
                     <span id="file-name">{file && file.name}</span>
-                    
                     <button onClick={onSubmit}>Upload</button>
                 </div>
+                <h2 className="error-msg">{error}</h2>
             </form>
         </div>
     )

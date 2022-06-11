@@ -1,6 +1,6 @@
 :root {
     --dark: #171717;
-    --main: #DA0037;
+    --main: #055fb4;
     --main2: #444444;
     --main3: #EDEDED;
 }
@@ -53,6 +53,7 @@ header, .row {
     gap: 0.5rem;
 }
 button,.upCont label {
+    border-radius: .25rem;
     background-color: var(--main);
     padding: 0.4rem;
     border: none;
@@ -63,13 +64,90 @@ button,.upCont label {
 }
 
 button:hover,.upCont label:hover {
-    background-color: #a00028
+    background-color: #014381
 }
 
 button:active,.upCont label:active {
-    background-color: #70001c;
+    background-color: #013464;
 }
 
 input[type="file"] {
     display: none;
+}
+input{
+    border-radius: .25rem;
+    margin:.5rem 0;
+    padding:.5rem;
+    border: 3px solid #595959;
+    background-color: var(--dark);
+    color: #ffffff;
+}
+input:focus{
+    outline: none !important;
+    border: 3px solid var(--main);
+}
+input::placeholder {
+    color: #bdbdbd;
+}
+/*new table*/
+table{
+    text-align: center;
+    border-collapse: separate;
+    border-spacing: 0 0.7rem;
+}
+th{
+    color: white;
+}
+td {
+    white-space: nowrap;
+    color: white;
+    background-color:#313131;
+    min-width: 2rem;
+    overflow: hidden;
+    padding: .6rem;
+}
+
+.download{
+    background-color:#055fb4;
+    transition: 0.5s;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.download:hover{
+    background-color:#014381;
+    transition: 0.5s;
+}
+
+.delete:hover{
+    background-color: #7a2222;
+    transition: 0.5s;
+}
+.error-msg{
+    color: #a62f2f;
+}
+td:first-child { border-top-left-radius: .35rem; }
+td:last-child { border-top-right-radius: .35rem; }
+td:first-child { border-bottom-left-radius: .35rem; }
+td:last-child { border-bottom-right-radius: .35rem }
+
+.darker{
+    background-color: #2a2a2a;
+}
+
+.storage{
+    color: white;
+    text-align: left;
+    position: fixed;
+    bottom: 1rem;
+    left: 1rem;
+}
+.link-ico{
+    color: gray;
+    height: .7rem;
+    cursor: pointer;
+    transition: .5s;
+}
+.link-ico:hover{
+    color: white;
 }
