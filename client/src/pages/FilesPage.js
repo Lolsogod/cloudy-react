@@ -36,11 +36,11 @@ export const FilesPage = () =>{
 
     return(
         <div className="fileContainer">
-            <h1>All Files</h1>
+            <h1>Все файлы</h1>
             <FilesList files={files} fetchFiles={fetchFiles} setFiles={setFiles}/>
             <div className="storage">
-                <div>Total: {prettySize(spaceInfo.total)}</div>
-                <div>Free: {prettySize(spaceInfo.total-spaceInfo.occupied)}</div>
+                <div>Всего: {prettySize(spaceInfo.total)}</div>
+                <div>Свободно: {prettySize(spaceInfo.total-spaceInfo.occupied)}</div>
                 <progress value={spaceInfo.occupied} max={spaceInfo.total}></progress>
             </div>
         </div>

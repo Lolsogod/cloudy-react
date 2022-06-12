@@ -42,6 +42,7 @@ const spaceInfo = async (req)=>{
     },0)
     return {occupied, total: usr.space}
 }
+
 router.post('/upload', auth, async (req, res) =>{
     try {
         upload(req, res, async (err)=>{
