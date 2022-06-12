@@ -42,7 +42,14 @@ const spaceInfo = async (req)=>{
     },0)
     return {occupied, total: usr.space}
 }
-
+//folders
+router.post('/new-folder', auth, async (req, res) =>{
+    try {
+    } catch (e) {
+        res.status(500).json({message: e.message});
+    }
+})
+//files
 router.post('/upload', auth, async (req, res) =>{
     try {
         upload(req, res, async (err)=>{
