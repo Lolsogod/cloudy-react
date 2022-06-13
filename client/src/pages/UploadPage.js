@@ -4,7 +4,7 @@ import axios from "axios";
 import {AuthContext} from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-export const UploadPage = () =>{
+export const UploadPage = ({curFolder, setCurFolderById}) =>{
     const navigate = useNavigate();
     const [file, setFile] = useState(null)
     const [error, setError] = useState("")
@@ -24,7 +24,8 @@ export const UploadPage = () =>{
 
         axios.post('/api/files/upload', data, {
             headers: {
-                Authorization: `Basic ${auth.token}`
+                Authorization: `Basic ${auth.token}`,
+                        current: curFolder._id
             }})
             .then(()=>navigate("/files"))
             .catch(e=>setError(e.response.data.message))

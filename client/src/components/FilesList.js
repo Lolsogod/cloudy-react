@@ -1,25 +1,30 @@
-import React from "react";
+import React, {useState} from "react";
 import axios from "axios";
 import {AuthContext} from "../context/AuthContext"
 import {useContext} from "react";
 import FileDownload from "js-file-download";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {getIcon} from "../hooks/icons.hook";
-import {faTrashCan, faDownload, faLink, faShare, faStop} from "@fortawesome/free-solid-svg-icons"
+import {faTrashCan, faDownload, faLink, faShare, faStop, faTurnUp} from "@fortawesome/free-solid-svg-icons"
 import {prettySize} from "../hooks/prettySize.hook"
 
-export const FilesList = ({files, setFiles, fetchFiles}) => {
+export const FilesList = ({files, setFiles, fetchFiles, curFolder, setCurFolderById}) => {
+    const folders = files.filter(file => file.type == "folder")
+    const onlyFiles = files.filter(file => file.type!="folder")
     const {token} = useContext(AuthContext)
+
     const downloadFile = (id, path) => {
         axios.get(`api/files/${id}`, {
             responseType: 'blob',
             headers: {Authorization: `Bearer ${token}`}})
             .then((response) => {
-                const fullName = path.split("\\").slice(-1)[0]
+                //убирает айди папки
+                let fullName = path.split("\\").pop().split(".")
+                fullName.shift()
+                fullName = fullName.join('.')
             FileDownload(response.data, fullName);
         });
     }
-
     const deleteFile = (id) => {
         axios.delete(`api/files/delete/${id}`, {
             headers: {Authorization: `Bearer ${token}`}})
@@ -37,7 +42,7 @@ export const FilesList = ({files, setFiles, fetchFiles}) => {
             .then(() => alert("Ссылка скопированна."))
             .catch(e=> alert("Неудалось скопировать ссылку: " + e))
     }
-    if (!files.length){
+    if (!files.length && curFolder._id == null){
         return <p>нет файлов</p>
     }
 
@@ -53,10 +58,37 @@ export const FilesList = ({files, setFiles, fetchFiles}) => {
                 </tr>
             </thead>
             <tbody>
-            {files.map((file, index) =>{
+            {curFolder._id &&
+            <tr>
+                <td className="darker">...</td>
+                <td><FontAwesomeIcon icon={faTurnUp} /></td>
+                <td onClick={()=>setCurFolderById(curFolder.parent?curFolder.parent:"root")}>На папку вверх</td>
+                <td></td><td></td>
+                <td > </td><td > </td>
+                <td></td>
+            </tr>}
+            {folders.map((file, index) =>{
                 return(
                     <tr key={file._id}>
                         <td className="darker">{index + 1}</td>
+                        <td><FontAwesomeIcon icon={getIcon(file.type, file.extension)} /></td>
+                        <td onClick={()=>setCurFolderById(file._id)}>{file.name + " "}
+                            {file.shared && <FontAwesomeIcon onClick={() => copyLink(file._id)}
+                                                             className="link-ico" icon={faLink} />}
+                        </td>
+                        <td> </td>
+                        <td>{file.date.split("T")[0]}</td>
+                        <td > </td>
+                        <td > </td>
+                        <td className={"download delete"} onClick={() => deleteFile(file._id)}>
+                            <FontAwesomeIcon icon={faTrashCan} /></td>
+                    </tr>
+                )})
+            }
+            {onlyFiles.map((file, index) =>{
+                return(
+                    <tr key={file._id}>
+                        <td className="darker">{index + folders.length+ 1}</td>
                         <td><FontAwesomeIcon icon={getIcon(file.type, file.extension)} /></td>
                         <td>{file.name + "." + file.extension + " "}
                             {file.shared && <FontAwesomeIcon onClick={() => copyLink(file._id)}
