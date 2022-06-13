@@ -152,3 +152,16 @@ td:last-child { border-bottom-right-radius: .35rem }
 .link-ico:hover{
     color: white;
 }
+.open-folder{
+    cursor: pointer;
+    transition: .5s;
+}
+.open-folder:hover{
+    background-color: #252525;
+}
+.text-left{
+    text-align: left;
+}
+.min-w{
+    min-width: 20rem;
+}

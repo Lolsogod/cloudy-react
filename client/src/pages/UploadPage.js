@@ -3,8 +3,9 @@ import React from "react";
 import axios from "axios";
 import {AuthContext} from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import {Navbar} from "../components/Navbar";
 
-export const UploadPage = ({curFolder, setCurFolderById}) =>{
+export const UploadPage = ({curFolder}) =>{
     const navigate = useNavigate();
     const [file, setFile] = useState(null)
     const [error, setError] = useState("")
@@ -33,13 +34,14 @@ export const UploadPage = ({curFolder, setCurFolderById}) =>{
 
     return(
         <div>
-            <h1>Upload</h1>
+            <Navbar />
+            <h1>Добавить файл</h1>
             <form method="post" action="#" id="#">
                 <div className="upCont">
-                    <label htmlFor="file" className="custom-upload">Choose</label>
+                    <label htmlFor="file" className="custom-upload">Выбрать файл</label>
                     <input type="file" name="file" id="file" multiple  onChange={onInput}/>
                     <span id="file-name">{file && file.name}</span>
-                    <button onClick={onSubmit}>Upload</button>
+                    {!!file && <button onClick={onSubmit}>Загрузить</button>}
                 </div>
                 <h2 className="error-msg">{error}</h2>
             </form>

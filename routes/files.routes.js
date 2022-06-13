@@ -42,7 +42,7 @@ const getUniqueName = async (origName, userId, folder) =>{
 
 const cascadeDelete = async (id) =>{
     const file = await  File.findOne({_id: id});
-    if(file.type == "folder" ){
+    if(file.type === "folder" ){
         let contains = await File.find({parent: file})
         contains.forEach(f=>{cascadeDelete(f)})
     }else
@@ -59,11 +59,12 @@ const spaceInfo = async (req)=>{
     },0)
     return {occupied, total: usr.space}
 }
-//folders
+//создание папки
 router.post('/new-folder', auth, async (req, res) =>{
     try {
         let name = (await getUniqueName(req.body.name, req.user.userId, req.body.parent)).split('.')
-        name.shift(), name.pop()
+        name.shift()
+        name.pop()
         console.log(name)
         const folder = new File({
             name: name.join('.'), extension: "", type: "folder",
@@ -76,6 +77,7 @@ router.post('/new-folder', auth, async (req, res) =>{
         res.status(500).json({message: e.message});
     }
 })
+//информация о файле/папке
 router.get('/info/:id', auth, async (req, res) =>{
     try {
         const file = await  File.findOne({_id: req.params.id});
@@ -85,12 +87,10 @@ router.get('/info/:id', auth, async (req, res) =>{
         res.json({_id: null})
     }
 })
-//files
+//загрузка файла
 router.post('/upload', auth, async (req, res) =>{
     try {
-        console.log("---------------------------------------------------------------")
-        console.log("i crashed")
-        upload(req, res, async (err)=>{
+        upload(req, res, async ()=>{
             let space = await spaceInfo(req)
             if(space.occupied + req.file.size <= space.total){
                 let splited = req.file.originalname.split('.')
@@ -102,7 +102,6 @@ router.post('/upload', auth, async (req, res) =>{
                 const type = req.file.mimetype
                 const path = `storage\\${req.user.userId}\\${req.file.originalname}`
                 const size = req.file.size
-                //console.log(path)
                 const dbFile = new File({
                     name, extension, type, path, size, owner: req.user.userId, parent
                 })
@@ -116,7 +115,7 @@ router.post('/upload', auth, async (req, res) =>{
         res.status(500).json({message: e.message});
     }
 })
-
+//открыть доступ к файлу
 router.put('/share/:id', auth, async (req, res) =>{
     try {
         let file = await  File.findOne({_id: req.params.id});
@@ -126,7 +125,7 @@ router.put('/share/:id', auth, async (req, res) =>{
         res.status(500).json({message: "что-то пошло не так...: " + e});
     }
 })
-
+//список файлов
 router.get('/', auth,async (req, res) =>{
     try {
         let files;
@@ -138,6 +137,7 @@ router.get('/', auth,async (req, res) =>{
         res.status(500).json({message: "что-то пошло не так..."});
     }
 })
+//информация о хранилищк
 router.get('/space/', auth, async (req, res)=>{
     try {
         res.status(200).json(await spaceInfo(req))
@@ -145,6 +145,7 @@ router.get('/space/', auth, async (req, res)=>{
         res.status(500).json({message: "что-то пошло не так...: " + e});
     }
 })
+//скачть файл по ссылке
 router.get('/shared/:id', async (req, res) =>{
     try {
         const file = await  File.findOne({_id: req.params.id});
@@ -164,6 +165,7 @@ router.get('/shared/:id', async (req, res) =>{
         res.status(401).json({message: "отказано в доступе.."});
     }
 })
+//скачать файл
 router.get('/:id', auth, async (req, res) =>{
     try {
         //console.log(req.params.id)
@@ -173,7 +175,7 @@ router.get('/:id', auth, async (req, res) =>{
         res.status(500).json({message: "что-то пошло не так..."});
     }
 })
-
+//удалить файл
 router.delete('/delete/:id', auth, async (req, res) =>{
     try {
         await cascadeDelete(req.params.id)
@@ -182,7 +184,5 @@ router.delete('/delete/:id', auth, async (req, res) =>{
         res.status(500).json({message: "что-то пошло не так...: " + e});
     }
 })
-
-
 
 module.exports = router;

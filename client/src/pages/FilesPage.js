@@ -3,6 +3,7 @@ import {AuthContext} from "../context/AuthContext";
 import {FilesList} from "../components/FilesList";
 import axios from "axios";
 import {prettySize} from "../hooks/prettySize.hook"
+import {Navbar} from "../components/Navbar";
 
 
 export const FilesPage = ({curFolder, setCurFolderById}) =>{
@@ -50,13 +51,14 @@ export const FilesPage = ({curFolder, setCurFolderById}) =>{
 
     return(
         <div className="fileContainer">
+            <Navbar setCurFolderById={setCurFolderById}/>
             <h1>Все файлы</h1>
             <FilesList files={files} fetchFiles={fetchFiles} setFiles={setFiles}
                        curFolder={curFolder} setCurFolderById={setCurFolderById}/>
             <input type="text" placeholder="Введите название папки..."
                    name="folder" required onChange={changeHandler}
                    value={newFolder}/>
-            <button onClick={createFolder}>create</button>
+            <button onClick={createFolder}>создать</button>
             <div className="storage">
                 <div>Всего: {prettySize(spaceInfo.total)}</div>
                 <div>Свободно: {prettySize(spaceInfo.total-spaceInfo.occupied)}</div>

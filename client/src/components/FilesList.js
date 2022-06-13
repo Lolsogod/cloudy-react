@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import axios from "axios";
 import {AuthContext} from "../context/AuthContext"
 import {useContext} from "react";
@@ -9,8 +9,8 @@ import {faTrashCan, faDownload, faLink, faShare, faStop, faTurnUp} from "@fortaw
 import {prettySize} from "../hooks/prettySize.hook"
 
 export const FilesList = ({files, setFiles, fetchFiles, curFolder, setCurFolderById}) => {
-    const folders = files.filter(file => file.type == "folder")
-    const onlyFiles = files.filter(file => file.type!="folder")
+    const folders = files.filter(file => file.type === "folder")
+    const onlyFiles = files.filter(file => file.type!=="folder")
     const {token} = useContext(AuthContext)
 
     const downloadFile = (id, path) => {
@@ -50,8 +50,7 @@ export const FilesList = ({files, setFiles, fetchFiles, curFolder, setCurFolderB
         <table>
             <thead>
                 <tr>
-                    <th>№</th>
-                    <th> </th>
+                    <th>№</th><th/>
                     <th>Имя</th>
                     <th>Размер</th>
                     <th>Дата</th>
@@ -62,24 +61,20 @@ export const FilesList = ({files, setFiles, fetchFiles, curFolder, setCurFolderB
             <tr>
                 <td className="darker">...</td>
                 <td><FontAwesomeIcon icon={faTurnUp} /></td>
-                <td onClick={()=>setCurFolderById(curFolder.parent?curFolder.parent:"root")}>На папку вверх</td>
-                <td></td><td></td>
-                <td > </td><td > </td>
-                <td></td>
+                <td className="open-folder  min-w text-left" onClick={()=>setCurFolderById(curFolder.parent?curFolder.parent:"root")}>На папку вверх</td>
+                <td/><td/><td/><td/><td/>
             </tr>}
             {folders.map((file, index) =>{
                 return(
                     <tr key={file._id}>
                         <td className="darker">{index + 1}</td>
                         <td><FontAwesomeIcon icon={getIcon(file.type, file.extension)} /></td>
-                        <td onClick={()=>setCurFolderById(file._id)}>{file.name + " "}
+                        <td className="open-folder text-left min-w" onClick={()=>setCurFolderById(file._id)}>{file.name + " "}
                             {file.shared && <FontAwesomeIcon onClick={() => copyLink(file._id)}
                                                              className="link-ico" icon={faLink} />}
-                        </td>
-                        <td> </td>
+                        </td><td/>
                         <td>{file.date.split("T")[0]}</td>
-                        <td > </td>
-                        <td > </td>
+                        <td/><td/>
                         <td className={"download delete"} onClick={() => deleteFile(file._id)}>
                             <FontAwesomeIcon icon={faTrashCan} /></td>
                     </tr>
@@ -90,12 +85,12 @@ export const FilesList = ({files, setFiles, fetchFiles, curFolder, setCurFolderB
                     <tr key={file._id}>
                         <td className="darker">{index + folders.length+ 1}</td>
                         <td><FontAwesomeIcon icon={getIcon(file.type, file.extension)} /></td>
-                        <td>{file.name + "." + file.extension + " "}
+                        <td className="text-left min-w">{file.name + "." + file.extension + " "}
                             {file.shared && <FontAwesomeIcon onClick={() => copyLink(file._id)}
                                                              className="link-ico" icon={faLink} />}
                         </td>
-                        <td >{prettySize(file.size)}</td>
-                        <td>{file.date.split("T")[0]}</td>
+                        <td className="text-left">{prettySize(file.size)}</td>
+                        <td >{file.date.split("T")[0]}</td>
                         <td className={"download"} onClick={() => shareFile(file._id, file.path)}>
                             <FontAwesomeIcon icon={file.shared?faStop:faShare} /></td>
                         <td className={"download"} onClick={() => downloadFile(file._id, file.path)}>

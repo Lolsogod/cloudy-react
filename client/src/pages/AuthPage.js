@@ -37,16 +37,16 @@ export const AuthPage = () =>{
     return(
         <div>
             <h1>CloudY</h1>
-            <label htmlFor="email"><b>Email</b></label><br/>
-            <input type="email" placeholder="Enter email"
+            <label htmlFor="email"><b>Почта</b></label><br/>
+            <input type="email" placeholder="Введите адрес почты"
                    name="email" required onChange={changeHandler}
                    value={form.email}/><br/>
-            <label htmlFor="password"><b>Password</b></label><br/>
-            <input type="password" placeholder="Enter Password"
+            <label htmlFor="password"><b>Пароль</b></label><br/>
+            <input type="password" placeholder="Введите пароль"
                    name="password" required onChange={changeHandler}
                    value={form.password}/><br/><br/>
-            <button onClick={loginHandler} disabled={loading} style={{marginRight: "1rem"}}>Login</button> 
-            <button onClick={registerHandler} disabled={loading}>Register</button>
+            <button onClick={loginHandler} disabled={loading} style={{marginRight: "1rem"}}>Вход</button>
+            <button onClick={registerHandler} disabled={loading}>Регитрация</button>
         </div>
     )
 }
