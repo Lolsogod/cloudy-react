@@ -5,7 +5,7 @@ import {AuthContext} from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import {Navbar} from "../components/Navbar";
 
-export const UploadPage = ({curFolder}) =>{
+export const UploadPage = ({curFolder, setCurFolderById}) =>{
     const navigate = useNavigate();
     const [file, setFile] = useState(null)
     const [error, setError] = useState("")
@@ -17,11 +17,8 @@ export const UploadPage = ({curFolder}) =>{
 
     const onSubmit = element =>{
         element.preventDefault();
-
         const data = new FormData();
-        console.log(file)
         data.append('file', file)
-        console.log(data)
 
         axios.post('/api/files/upload', data, {
             headers: {
@@ -34,7 +31,7 @@ export const UploadPage = ({curFolder}) =>{
 
     return(
         <div>
-            <Navbar />
+            <Navbar setCurFolderById={setCurFolderById} />
             <h1>Добавить файл</h1>
             <form method="post" action="#" id="#">
                 <div className="upCont">

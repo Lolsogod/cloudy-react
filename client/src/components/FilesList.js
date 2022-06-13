@@ -22,14 +22,15 @@ export const FilesList = ({files, setFiles, fetchFiles, curFolder, setCurFolderB
                 let fullName = path.split("\\").pop().split(".")
                 fullName.shift()
                 fullName = fullName.join('.')
-            FileDownload(response.data, fullName);
-        });
+            FileDownload(response.data, fullName)
+                ;
+        }).catch(e=>alert("Ошибка при скачивании: " + e));
     }
     const deleteFile = (id) => {
         axios.delete(`api/files/delete/${id}`, {
             headers: {Authorization: `Bearer ${token}`}})
             .then(() =>{fetchFiles(setFiles)})
-            .catch(e=>alert("Неудалось поделится: " + e))
+            .catch(e=>alert("Неудалось удалить файл: " + e))
     }
     const shareFile = (id) => {
         axios.put(`api/files/share/${id}`, {},{
@@ -85,7 +86,7 @@ export const FilesList = ({files, setFiles, fetchFiles, curFolder, setCurFolderB
                     <tr key={file._id}>
                         <td className="darker">{index + folders.length+ 1}</td>
                         <td><FontAwesomeIcon icon={getIcon(file.type, file.extension)} /></td>
-                        <td className="text-left min-w">{file.name + "." + file.extension + " "}
+                        <td className="text-left min-w">{file.name}{!!file.extension && ("." + file.extension)}{" "}
                             {file.shared && <FontAwesomeIcon onClick={() => copyLink(file._id)}
                                                              className="link-ico" icon={faLink} />}
                         </td>

@@ -16,7 +16,6 @@ router.post('/register',
     async (req, res) =>{
     try {
         const errors = validationResult(req)
-        console.log(req.body);
         if (!errors.isEmpty())
             return res.status(400).json({
                 errors: errors.array(),
@@ -63,7 +62,6 @@ router.post('/login',
         const  {email, password} = req.body;
 
         const user = await User.findOne({email})
-        console.log(email)
         if(!user)
             return res.status(400).json({message: "Пользователь не найден"})
 

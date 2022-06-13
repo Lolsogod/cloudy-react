@@ -27,14 +27,12 @@ const getUniqueName = async (origName, userId, folder) =>{
     let candidate = await File.findOne(
         {name: tmpName, extension: ext,
             owner: userId, parent: folder=="null"?null:folder})
-    console.log(candidate)
     while (candidate){
         c++;
         candidate =  await File.findOne(
             {name: tmpName + `(${c})`, extension: ext,
                 owner: userId, parent: folder=="null"?null:folder});
     }
-    console.log("i am here!")
     if (c === 0) return `${folder}.${tmpName}.${ext}`
     return `${folder}.${tmpName}(${c}).${ext}`
 
@@ -65,7 +63,6 @@ router.post('/new-folder', auth, async (req, res) =>{
         let name = (await getUniqueName(req.body.name, req.user.userId, req.body.parent)).split('.')
         name.shift()
         name.pop()
-        console.log(name)
         const folder = new File({
             name: name.join('.'), extension: "", type: "folder",
             path: `storage\\${req.user.userId}`, size: 0, owner: req.user.userId,
@@ -130,10 +127,8 @@ router.get('/', auth,async (req, res) =>{
     try {
         let files;
         files = await  File.find({owner: req.user.userId, parent: req.query.folderId})
-        //console.log(files)
         res.json(files);
     } catch (e) {
-        //console.log(req, req.headers.authorization)
         res.status(500).json({message: "что-то пошло не так..."});
     }
 })
@@ -149,13 +144,6 @@ router.get('/space/', auth, async (req, res)=>{
 router.get('/shared/:id', async (req, res) =>{
     try {
         const file = await  File.findOne({_id: req.params.id});
-        //убрать
-        try {
-            res.set( {'Content-Type': 'blob; charset=utf-8'});
-        }catch (e) {
-           console.log(e)
-        }
-        console.log(res)
 
         if(file.shared)
             res.download(file.path, `${file.name}${file.extension?("." + file.extension):""}`);
@@ -168,7 +156,6 @@ router.get('/shared/:id', async (req, res) =>{
 //скачать файл
 router.get('/:id', auth, async (req, res) =>{
     try {
-        //console.log(req.params.id)
         const file = await  File.find({_id: req.params.id});
         res.download(file[0].path);
     } catch (e) {
