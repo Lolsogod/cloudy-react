@@ -8,7 +8,9 @@ const schema = new Schema({
     size: {type: Number, required:true},
     date: {type: Date, default: Date.now()},
     shared: {type: Boolean, default: false, required:true},
-    owner: {type: Types.ObjectId, ref: 'User'}
+    owner: {type: Types.ObjectId, ref: 'User'},
+    //folders
+    parent: {type: Types.ObjectId, ref: 'File'}
 })
 
 module.exports = model('File', schema)

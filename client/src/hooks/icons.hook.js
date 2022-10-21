@@ -6,7 +6,8 @@ import {
     faFilm,
     faFont,
     faImage,
-    faMusic
+    faMusic,
+    faFolder
 } from "@fortawesome/free-solid-svg-icons";
 
 const icons = new Map()
@@ -37,6 +38,7 @@ icons.set("7z", faFileZipper)
 icons.set("x-7z-compressed", faFileZipper)
 icons.set("vnd.ms-excel", faFileExcel)
 icons.set("vnd.openxmlformats-officedocument.spreadsheetml.sheet", faFileExcel)
+icons.set("folder", faFolder)
 
 export const getIcon = (mimeType, ext)=>{
     let split = mimeType.split("/")

@@ -4,12 +4,13 @@ import {AuthContext} from "../context/AuthContext";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faArrowRightFromBracket, faPlus} from "@fortawesome/free-solid-svg-icons";
 
-export const Navbar = () => {
+export const Navbar = ({setCurFolderById}) => {
     const navigate = useNavigate();
     const auth = useContext(AuthContext);
 
     const logoutHandler = event => {
         event.preventDefault()
+        setCurFolderById("root")
         auth.logout();
         navigate("/");
     }
