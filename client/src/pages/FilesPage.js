@@ -14,6 +14,7 @@ export const FilesPage = ({curFolder, setCurFolderById}) =>{
     const [spaceInfo, setSpaceInfo] = useState([])
     const [newFolder, setNewFolder] = useState("");
     const {token} = useContext(AuthContext)
+
     const fetchFiles = useCallback( (callback) => {
         axios.get(`/api/files/`, {
             headers: {Authorization: `Basic ${token}`},

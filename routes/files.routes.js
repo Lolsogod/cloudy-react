@@ -57,6 +57,170 @@ const spaceInfo = async (req)=>{
     },0)
     return {occupied, total: usr.space}
 }
+/**
+ * @swagger
+ * components:
+ *  securitySchemes:
+ *      BearerAuth:
+ *          type: http
+ *          scheme: bearer
+ *  schemas:
+ *      File:
+ *          type: object
+ *          required:
+ *              - name
+ *              - type
+ *              - path
+ *              - size
+ *              - shared
+ *          properties:
+ *              name:
+ *                  type: string
+ *                  description: name of the file
+ *              type: 
+ *                  type: string
+ *                  description: type of file
+ *              path:
+ *                  type: string
+ *                  description: path to the file
+ *              size:
+ *                  type: number
+ *                  description: size of the file
+ *              shared:
+ *                  type: boolean
+ *                  description: is file shared
+ *              extension:
+ *                  type: string
+ *                  description: file extension 
+ *              date:
+ *                  type: date
+ *                  description: date of uploading 
+ *              owner:
+ *                  type: string
+ *                  description: id of file owner
+ *              parrent:
+ *                  type: string
+ *                  description: id of directory
+ *              _id:
+ *                  type: string
+ *                  description: file id 
+ *          example:
+ *              date: "2022-10-21T17:47:34.264Z"
+ *              extension: "pdf"
+ *              name: "BOOK"
+ *              owner: "6352db5c66d5de528dc803ce"
+ *              parent: null
+ *              path: "storage\\6352db5c66d5de528dc803ce\\null.book.pdf"
+ *              shared: false
+ *              size: 253316
+ *              type: "application/pdf"
+ *              __v: 0
+ *              _id: "6352db6a66d5de528dc803d9"
+ *      Folder:
+ *          type: object
+ *          required:
+ *              - name
+ *              - parrent
+ *          properties:
+ *              name:
+ *                  type: string
+ *                  description: name of the file
+ *              parrent:
+ *                  type: string
+ *                  description: id of directory
+ *          example:
+ *              name: "test-folder"
+ *              parrent: null
+ */
+
+/**
+ * @swagger
+ * tags: 
+ *  name: Files
+ *  description: The files mangaing API 
+ */
+
+/**
+ * @swagger
+ * /api/files:
+ *  get:
+ *      security: 
+ *        - BearerAuth: []
+ *      summary: Returns the list of all files
+ *      tags: [Files]
+ *      responses: 
+ *          304:
+ *              description: The list of the files
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: array
+ *                          items: 
+ *                              $ref: '#/components/schemas/File'
+ */
+//список файлов
+router.get('/', auth,async (req, res) =>{
+    try {
+        let files = await  File.find({owner: req.user.userId, parent: req.query.folderId})
+        res.json(files);
+    } catch (e) {
+        res.status(500).json({message: "что-то пошло не так..."});
+    }
+})
+
+/**
+ * @swagger
+ * /api/files/info/{id}:
+ *  get:
+ *      security: 
+ *        - BearerAuth: []
+ *      summary: Get file by id
+ *      tags: [Files]
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          schema: 
+ *              type: string
+ *          required: true
+ *      responses: 
+ *          304:
+ *              description: The file info by id
+ *              content:
+ *                  application/json:
+ *                      schema: 
+ *                          $ref: '#/components/schemas/File'
+ */
+//информация о файле/папке
+router.get('/info/:id', auth, async (req, res) =>{
+    try {
+        const file = await  File.findOne({_id: req.params.id});
+        res.json(file)
+    } catch (e) {
+        //костыль
+        res.json({_id: null})
+    }
+})
+
+/**
+ * @swagger
+ * /api/files/new-folder:
+ *  post:
+ *      security: 
+ *        - BearerAuth: []
+ *      summary: Create new folder
+ *      tags: [Files]
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                       $ref: '#/components/schemas/Folder'
+ *      resoinses:
+ *          200:
+ *              description: The folder was created succesfully
+ *          500: 
+ *              description: folder creation failed
+ */
 //создание папки
 router.post('/new-folder', auth, async (req, res) =>{
     try {
@@ -72,16 +236,6 @@ router.post('/new-folder', auth, async (req, res) =>{
         res.status(200).json({message: "created"});
     } catch (e) {
         res.status(500).json({message: e.message});
-    }
-})
-//информация о файле/папке
-router.get('/info/:id', auth, async (req, res) =>{
-    try {
-        const file = await  File.findOne({_id: req.params.id});
-        res.json(file)
-    } catch (e) {
-        //костыль
-        res.json({_id: null})
     }
 })
 //загрузка файла
@@ -122,16 +276,7 @@ router.put('/share/:id', auth, async (req, res) =>{
         res.status(500).json({message: "что-то пошло не так...: " + e});
     }
 })
-//список файлов
-router.get('/', auth,async (req, res) =>{
-    try {
-        let files;
-        files = await  File.find({owner: req.user.userId, parent: req.query.folderId})
-        res.json(files);
-    } catch (e) {
-        res.status(500).json({message: "что-то пошло не так..."});
-    }
-})
+
 //информация о хранилищк
 router.get('/space/', auth, async (req, res)=>{
     try {
